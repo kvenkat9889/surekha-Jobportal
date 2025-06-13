@@ -1,0 +1,54 @@
+version: '3.8'
+
+services:
+  postgres:
+    image: postgres:13
+    container_name: jobportal-postgres
+    restart: always
+    environment:
+      POSTGRES_USER: admin
+      POSTGRES_PASSWORD: admin123
+      POSTGRES_DB: jobportal_db
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+      - ./init.sql:/docker-entrypoint-initdb.d/init.sql
+    ports:
+      - "5803:5432"
+
+  backend:
+    build: ./Backend
+    container_name: jobportal-backend
+    restart: always
+    ports:
+      - "3803:3803"
+    depends_on:
+      - postgres
+    environment:
+      DB_USER: admin
+      DB_PASSWORD: admin123
+      DB_HOST: postgres
+      DB_PORT: 5432
+      DB_NAME: jobportal_db
+      PORT: 3803
+
+  browsing-jobs:
+    build: ./browsing-jobs
+    container_name: jobportal-browsing-jobs
+    restart: always
+    ports:
+      - "8105:80"
+    depends_on:
+      - backend
+
+  hr-side-posting:
+    build: ./hr-side-posting
+    container_name: jobportal-hr-side-posting
+    restart: always
+    ports:
+      - "8106:80"
+    depends_on:
+      - backend
+
+volumes:
+  pgdata:
+
