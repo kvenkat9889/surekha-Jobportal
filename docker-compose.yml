@@ -6,9 +6,9 @@ services:
     container_name: jobportal-postgres
     restart: always
     environment:
-      POSTGRES_USER: admin
+      POSTGRES_USER: postgres
       POSTGRES_PASSWORD: admin123
-      POSTGRES_DB: jobportal_db
+      POSTGRES_DB: talenthub
     volumes:
       - pgdata:/var/lib/postgresql/data
       - ./init.sql:/docker-entrypoint-initdb.d/init.sql
@@ -24,11 +24,11 @@ services:
     depends_on:
       - postgres
     environment:
-      DB_USER: admin
+      DB_USER: postgres
       DB_PASSWORD: admin123
       DB_HOST: postgres
       DB_PORT: 5432
-      DB_NAME: jobportal_db
+      DB_NAME: talenthub
       PORT: 3803
 
   browsing-jobs:
